@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Sabor da Vila</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #b22222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1, h2 {
+      margin: 0;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+
+    .menu {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .botoes-categorias {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .categoria {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 120px;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .categoria:hover {
+      transform: scale(1.05);
+    }
+
+    .categoria img {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .categoria p {
+      margin: 0;
+      font-weight: bold;
+      font-size: 14px;
+      color: #b22222;
+    }
+
+    .item {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .item img {
+      width: 100%;
+      max-width: 250px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .item button {
+      background: #b22222;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .carrinho {
+      background: #f9e68abf;
+      width: 300px;
+      padding: 20px;
+      border-radius: 8px;
+      position: sticky;
+      top: 0;
+      height: fit-content;
+    }
+
+    #listaCarrinho li {
+      margin-bottom: 8px;
+    }
+
+    #listaCarrinho button {
+      margin-left: 10px;
+      background: #888;
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+    }
+
+    select, input[type="radio"], input[type="text"] {
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .carrinho {
+        width: 100%;
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Sabor da Vila</h1>
+  <p>Cardápio Online</p>
+</header>
+
+<div class="container">
+  <section class="menu">
+    <h2 style="font-size: 28px; color: #b22222; font-weight: bold;">Cardápio</h2>
+
+    <div class="botoes-categorias">
+      <div class="categoria" onclick="mostrarSabores('hamburguer')">
+        <img src="https://minervafoods.com/wp-content/uploads/2023/09/HamburguerAlcatraComBacon_1-scaled.jpg" alt="Hamburguer">
+        <p>🍔 Hambúrguer</p>
+      </div>
+      <div class="categoria" onclick="mostrarSabores('pizza')">
+        <img src="https://conteudo.imguol.com.br/c/entretenimento/b1/2020/07/09/pizza-pepperoni-1594305789491_v2_4x3.jpg" alt="Pizza">
+        <p>🍕 Pizza</p>
+      </div>
+      <div class="categoria" onclick="mostrarSabores('sobremesa')">
+        <img src="https://www.guiadasemana.com.br/contentFiles/image/opt_w1280h960/2021/04/FEA/66992_shutterstock-483777991.jpg" alt="Sobremesa">
+        <p>🍮 Sobremesas</p>
+      </div>
+      <div class="categoria" onclick="mostrarSabores('refrigerante')">
+        <img src="https://yorkgrill.com.br/wp-content/uploads/2022/06/refrigerante.png" alt="Refrigerantes">
+        <p>🥤 Refrigerantes</p>
+      </div>
+     
+
+    <div id="sabores"></div>
+  </section>
+
+  <section class="carrinho">
+    <h2>Carrinho</h2>
+    <ul id="listaCarrinho"></ul>
+    <p><strong>Total:</strong> R$ <span id="total">0</span></p>
+
+    <h3>Recebimento:</h3>
+    <label><input type="radio" name="recebimento" value="retirar" checked> Retirar no local</label><br>
+    <label><input type="radio" name="recebimento" value="entrega"> Entregar em casa</label>
+
+    <h3>Nome e Endereço:</h3>
+    <input type="text" id="nomePessoa" placeholder="Digite seu nome" required><br>
+    <input type="text" id="enderecoEntrega" placeholder="Digite o endereço de entrega" required><br>
+
+    <h3>Pagamento:</h3>
+    <select id="pagamento">
+      <option>Dinheiro</option>
+      <option>Cartão de Débito</option>
+      <option>Cartão de Crédito</option>
+      <option>Pix</option>
+    </select>
+
+    <div id="dinheiro-options" style="display: none;">
+      <input type="number" id="valorDinheiro" placeholder="Valor pago" required><br>
+      <p id="troco" style="display: none;">Troco: R$ <span id="trocoValue">0.00</span></p>
+    </div>
+
+    <div id="pix-options" style="display: none;">
+      <input type="text" id="chavePix" placeholder="Digite sua chave Pix" required><br>
+    </div>
+
+    <br><br>
+    <button onclick="finalizarPedido()">Finalizar Pedido</button>
+  </section>
+</div>
+
+<script>
+  let total = 0;
+  const listaCarrinho = document.getElementById('listaCarrinho');
+  const totalSpan = document.getElementById('total');
+  const carrinhoItens = [];
+
+  const sabores = {
+    hamburguer: [
+      { nome: 'Bacon Duplo', preco: 28, imagem: 'https://atm-accounts.s3-sa-east-1.amazonaws.com/156/files/thumbs/mz8ze911n76c1qxztd35-large.jpg' },
+      { nome: 'Cheddar Picanha', preco: 30, imagem: 'https://media-cdn.tripadvisor.com/media/photo-i/12/48/be/0c/cheddar-picanha-salada.jpg' },
+      { nome: 'Vegano', preco: 26, imagem: 'https://veganbusiness.com.br/wp-content/uploads/2018/12/hamburguer-vegano.jpg' }
+    ],
+    pizza: [
+      { nome: 'Calabresa', preco: 40, imagem: 'https://swiftbr.vteximg.com.br/arquivos/ids/202872-450-450/618283-pizza-artesanal-de-calabresa_1.jpg?v=638679052014630000' },
+      { nome: 'Frango c/ Catupiry', preco: 42, imagem: 'https://s3-sa-east-1.amazonaws.com/loja2/fe1aaff8a7af0317dfb8c069d3abc006.jpg' },
+      { nome: 'Marguerita', preco: 40, imagem: 'https://p2.trrsf.com/image/fget/cf/774/0/images.terra.com/2023/07/12/istock-1209038608-1jy7py02omyqp.jpg' }
+    ],
+    sobremesa: [
+      { nome: 'Pudim', preco: 12, imagem: 'https://cdn.awsli.com.br/600x450/2475/2475729/produto/1714273194e56aa64b0.jpg' },
+      { nome: 'Mousse de Chocolate', preco: 10, imagem: 'https://tdc1fe.vteximg.com.br/arquivos/ids/164578-292-292/MOUSSE-DE-CHOCOLATE-KG.png?v=638419688078200000' },
+      { nome: 'Açaí 300ml', preco: 15, imagem: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr_3_IpUZs8qQc3guGcIZGbgWA3zbSPbQAfg&s' }
+    ],
+    refrigerante: [
+      { nome: 'Coca-Cola', preco: 6.5, imagem: 'https://marmoreio.com.br/wp-content/uploads/2020/05/coca-cola-lata-1.jpg' },
+      { nome: 'Guaraná', preco: 6, imagem: 'https://lojaqui.com.br/images/produtos/site/14262.jpg' },
+      { nome: 'Fanta Laranja', preco: 6, imagem: 'https://res.cloudinary.com/piramides/image/upload/c_fill,h_564,w_395/v1/products/12602-fanta-laranja-lata-220ml-6un.20250328143649.png?_a=BAAAV6GX' }
+    ]
+  };
+
+  function mostrarSabores(categoria) {
+    const container = document.getElementById('sabores');
+    container.innerHTML = '';
+    sabores[categoria].forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <img src="${item.imagem}" alt="${item.nome}">
+        <p><strong>${item.nome}</strong> - R$ ${item.preco.toFixed(2)}</p>
+        <button onclick="adicionarCarrinho('${item.nome}', ${item.preco})">Adicionar</button>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function adicionarCarrinho(item, preco) {
+    const li = document.createElement('li');
+    const index = carrinhoItens.length;
+    li.innerHTML = `${item} - R$ ${preco.toFixed(2)} <button onclick="removerItem(${index})">Remover</button>`;
+    listaCarrinho.appendChild(li);
+    total += preco;
+    totalSpan.textContent = total.toFixed(2);
+    carrinhoItens.push({ nome: item, preco, element: li });
+  }
+
+  function removerItem(index) {
+    const item = carrinhoItens[index];
+    if (item) {
+      total -= item.preco;
+      totalSpan.textContent = total.toFixed(2);
+      item.element.remove();
+      carrinhoItens[index] = null;
+    }
+  }
+
+  function finalizarPedido() {
+    const tipoEntrega = document.querySelector('input[name="recebimento"]:checked').value;
+    const formaPagamento = document.getElementById('pagamento').value;
+    const nome = document.getElementById('nomePessoa').value;
+    const endereco = document.getElementById('enderecoEntrega').value;
+    
+    let mensagem = `Pedido: \n\n`;
+    carrinhoItens.forEach(item => {
+      if (item) {
+        mensagem += `${item.nome} - R$ ${item.preco.toFixed(2)}\n`;
+      }
+    });
+    
+    mensagem += `\nTotal: R$ ${total.toFixed(2)}\n`;
+    mensagem += `Nome: ${nome}\n`;
+    mensagem += `Endereço: ${endereco}\n`;
+    mensagem += `Método de pagamento: ${formaPagamento}\n`;
+    mensagem += `Tipo de entrega: ${tipoEntrega}`;
+
+    const whatsappLink = `https://wa.me/5524993297319?text=${encodeURIComponent(mensagem)}`;
+    window.open(whatsappLink, '_blank');
+  }
+</script>
+
+</body>
+</html>
+
